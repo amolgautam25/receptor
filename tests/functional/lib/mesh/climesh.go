@@ -406,11 +406,11 @@ func NewCLIMeshFromYaml(MeshDefinition YamlData, dirSuffix string) (*CLIMesh, er
 	return mesh, nil
 }
 
-func ModifyCLIMeshFromYaml(MeshDefinition YamlData, dirSuffix string, ExistingMesh CLIMesh) error {
+func ModifyCLIMeshFromYaml(MeshDefinition YamlData, ExistingMesh CLIMesh) error {
 
 	// remove NodedefConnection []interface{} from existing mesh
-	for k := range MeshDefinition.Nodes{
-		MeshDefinition.Nodes[k].NodedefConnection=nil;
+	for k := range MeshDefinition.Nodes {
+		MeshDefinition.Nodes[k].NodedefConnection = nil
 	}
 
 	for k := range MeshDefinition.Nodes {
@@ -502,9 +502,14 @@ func ModifyCLIMeshFromYaml(MeshDefinition YamlData, dirSuffix string, ExistingMe
 	for k, node := range ExistingMesh.nodes {
 		node.yamlConfig = MeshDefinition.Nodes[k].Nodedef
 		node.yamlConfig = append(node.yamlConfig, MeshDefinition.Nodes[k].NodedefConnection)
-		err := ( write the config file ) // have to write that function 
+		strData, err := yaml.Marshal(node.yamlConfig)
 		if err != nil {
-			return nil, err
+			return err
+		}
+		nodedefPath := filepath.Join(node.dir, "nodedef.yaml")
+		err = ioutil.WriteFile(nodedefPath, strData, 0644)
+		if err != nil {
+			return err
 		}
 	}
 

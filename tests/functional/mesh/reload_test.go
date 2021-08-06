@@ -87,6 +87,6 @@ func TestReload(t *testing.T) {
 	}
 
 	// replace existing mesh with this YAML data
-	err = mesh.ModifyCLIMeshFromYaml(modified_data, "reload_mesh_test", *m)
+	err = mesh.ModifyCLIMeshFromYaml(modified_data, *m)
 	fmt.Println(err)
 }
